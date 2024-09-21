@@ -1,0 +1,57 @@
+<div class="askladd_util_settings">
+  <div class="inline-drawer">
+    <div class="inline-drawer-toggle inline-drawer-header">
+      <b>Askladd Util</b>
+      <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+    </div>
+    <div class="inline-drawer-content">
+      <div class="example-extension_block flex-container">
+        <div data-sd-source="comfy">
+          <label for="pov_comfy_url">ComfyUI URL</label>
+          <divll class="flex-container flexnowrap">
+            <input id="pov_comfy_url" type="text" class="text_pole" data-i18n="[placeholder]pov_comfy_url"
+              placeholder="Example: {{comfy_url}}" value="{{comfy_url}}" />
+            <div id="pov_comfy_validate" class="menu_button menu_button_icon">
+              <i class="fa-solid fa-check"></i>
+              <span data-i18n="Connect">
+                Connect
+              </span>
+            </div>
+          </divll>
+          <p><i><b data-i18n="Important:">Important:</b></i><i
+              data-i18n="The server must be accessible from the SillyTavern host machine."> The server must be
+              accessible from the SillyTavern host machine.</i></p>
+          <label for="pov_modular_comfy_workflow">Modular ComfyUI Workflow</label>
+          <div class="flex-container flexnowrap">
+            <select id="pov_modular_comfy_workflow" class="flex1 text_pole"></select>
+          </div>
+          <label for="pov_sampler_preset">Pov Sampler Preset</label>
+          <div class="flex-container flexnowrap">
+            <select id="pov_sampler_preset" class="flex1 text_pole"></select>
+          </div>
+        </div>
+      </div>
+      <div id="pov_character_prompt_block">
+        <label for="pov_people_id" data-i18n="Character-specific prompt prefix">Character-specific people_id</label>
+        <textarea id="pov_people_id" class="text_pole textarea_compact"
+          data-i18n="[placeholder]pov_character_prompt_placeholder" placeholder=""></textarea>
+        </label>
+        <label for="pov_extra_positive_prompt" data-i18n="Character-specific prompt prefix">Character-specific extra
+          positive prompt </label>
+        <textarea id="pov_extra_positive_prompt" class="text_pole textarea_compact"
+          data-i18n="[placeholder]pov_character_prompt_placeholder" placeholder=""></textarea>
+        </label>
+        <label for="pov_negative_prompt" data-i18n="Character-specific prompt prefix">Character-specific negative prompt
+        </label>
+        <textarea id="pov_negative_prompt" class="text_pole textarea_compact"
+          data-i18n="[placeholder]pov_character_prompt_placeholder" placeholder=""></textarea>
+      </div>
+      <div id="quick_impersonate_block">
+        <label for="quick_impersonate_prompt" data-i18n="Quick impoersonate prompt">Quick impersonate prompt</label>
+        <textarea id="quick_impersonate_prompt" class="text_pole textarea_compact"
+          data-i18n="[placeholder]quick_impersonate_prompt_placeholder" placeholder=""></textarea>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
