@@ -11,6 +11,7 @@ import {
     getCurrentChatId,
     getRequestHeaders,
     saveChatConditional,
+    saveSettings,
     saveSettingsDebounced,
     substituteParamsExtended,
     system_avatar,
@@ -108,7 +109,7 @@ async function loadComfyWorkflows() {
     }
 }
 
-async function loadPovPresets() {
+function loadPovPresets() {
     try {
         $("#pov_sampler_preset").empty();
         for (const preset_name of textgenerationwebui_preset_names) {
@@ -128,9 +129,7 @@ function onComfyUrlInput() {
     saveSettingsDebounced();
 }
 
-// Loads the extension settings if they exist, otherwise initializes them to the
-// defaults.
-async function loadSettings() {
+function loadSettings() {
     // Create the settings if they don't exist
     askladdExtensionSettings = askladdExtensionSettings || {};
     if (Object.keys(askladdExtensionSettings).length === 0) {
@@ -149,8 +148,8 @@ async function loadSettings() {
 
     $('#pov_comfy_url').val(askladdExtensionSettings.comfy_url);
     $('#quick_impersonate_prompt').val(askladdExtensionSettings.quick_impersonate_prompt);
-    await loadComfyWorkflows();
-    await loadPovPresets();
+    loadComfyWorkflows();
+    loadPovPresets();
 }
 
 async function generateComfyImage(prompt) {
@@ -582,7 +581,7 @@ function onComfyWorkflowChange() {
     askladdExtensionSettings.modular_comfy_workflow =
         $('#pov_modular_comfy_workflow').find(':selected').val();
     console.log("Modular Comfy Workflow: ", askladdExtensionSettings.modular_comfy_workflow);
-    saveSettingsDebounced();
+    saveSettings();
 }
 
 function onSamplerPresetChange() {
@@ -693,10 +692,25 @@ async function processHotkeys(event) {
     }
 }
 
-// This function is called when the extension is loaded
 jQuery(async () => {
-    // This is an example of loading HTML from a file
     const settingsHtml = await $.get(`${extensionFolderPath}/settings.html`);
+    $("#extensions_settings").append(settingsHtml);
+    loadSettings();
+
+
+    $('#pov_comfy_url').on('input', onComfyUrlInput);
+    $('#pov_comfy_validate').on('click', validateComfyUrl);
+    $('#pov_modular_comfy_workflow').on('change', onComfyWorkflowChange);
+    $('#pov_sampler_preset').on('change', onSamplerPresetChange);
+    $('#pov_people_id').on('input', onPeopleIdInput);
+    $('#pov_extra_positive_prompt').on('input', onExtraPositivePromptInput);
+    $('#pov_negative_prompt').on('input', onNegativePromptInput);
+    $('#quick_impersonate_prompt').on('input', onQuickImpersonatePromptInput);
+    $(document).on('keydown', async function (event) {
+        await processHotkeys(event.originalEvent);
+    });
+    eventSource.on(event_types.CHAT_CHANGED, onChatChanged);
+
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: "pov_json",
         callback: (args, jsonString) => povJson(args, jsonString),
@@ -722,28 +736,4 @@ jQuery(async () => {
         helpString: 'generate from json',
     }))
 
-    // Append settingsHtml to extensions_settings
-    // extension_settings and extensions_settings2 are the left and right columns
-    // of the settings menu Left should be extensions that deal with system
-    // functions and right should be visual/UI related
-    $("#extensions_settings").append(settingsHtml);
-
-    $('#pov_comfy_url').on('input', onComfyUrlInput);
-    $('#pov_comfy_validate').on('click', validateComfyUrl);
-    $('#pov_modular_comfy_workflow').on('change', onComfyWorkflowChange);
-    $('#pov_sampler_preset').on('change', onSamplerPresetChange);
-    $('#pov_character_prompt_block').hide();
-    $('#pov_people_id').on('input', onPeopleIdInput);
-    $('#pov_extra_positive_prompt').on('input', onExtraPositivePromptInput);
-    $('#pov_negative_prompt').on('input', onNegativePromptInput);
-    $('#quick_impersonate_prompt').on('input', onQuickImpersonatePromptInput);
-
-    $(document).on('keydown', async function (event) {
-        await processHotkeys(event.originalEvent);
-    });
-
-    eventSource.on(event_types.CHAT_CHANGED, onChatChanged);
-
-    // Load settings when starting things up (if you have any)
-    await loadSettings();
 });
